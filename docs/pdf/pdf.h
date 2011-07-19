@@ -32,13 +32,15 @@ struct XRefEntry {
   enum XRefType type;
 };
 
-int extractInfo(struct Document *doc);
+int getXRefSize(struct Document *doc);
 
-int extractImages(struct Document *doc, int page);
+int getInfo(struct Document *doc);
 
-int extractText(struct Document *doc, int page);
+int getImages(struct Document *doc, int page);
 
-int extractTextPos(struct Document *doc, int page);
+int getText(struct Document *doc, int page);
+
+int getTextPos(struct Document *doc, int page);
 
 int getNumPages(struct Document *doc);
 

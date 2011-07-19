@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <document.h>
 
 struct Document getDoc(char *filename)
@@ -50,6 +52,51 @@ int closeDoc(struct Document *doc)
     return close(doc->descriptor);
 };
 
+char *getDocLineBack(struct Document *doc, int nline)
+{
+    int i, rsize, csize, currline;
+    char buffer;
+    char *buffer, *line, *linebuf;
+
+    i = 0;
+    currline = 0;
+    csize = 0;
+    line = malloc(csize);
+
+    while (1)
+    {
+        lseek(doc->descriptor, -(++i), SEEK_END);
+        rsize = read(doc->descriptor, &buffer, 1);
+        if (rsize == -1)
+            break;
+
+        if (buffer == '\n' || buffer == EOF)
+        {
+            if (currline++ == nline)
+                break;
+
+            csize = 0;
+            free(line);
+            line = malloc(csize);
+        } else {
+            line = realloc(line, ++csize);
+            line[csize-1] = buffer;
+        }
+    }
+
+    linebuf = malloc(sizeof(line));
+    rsize = 0;
+    for (i=csize; i>=0; i--)
+    {
+        if (line[i] == 0)
+            continue;
+        linebuf[rsize++] = line[i];
+    }
+    free(line);
+
+    return linebuf;
+}
+
 int getDocType(struct Document *doc)
 {
     char buffer[10];
@@ -63,8 +110,8 @@ int getDocType(struct Document *doc)
     {
         // verify if the doc is a pdf file
         // standard header of pdf is:%PDF-1.4\n
-        header[4] = '\0';
-        if (strcmp("%PDF", header) == 0)
+        buffer[4] = '\0';
+        if (strcmp("%PDF", buffer) == 0)
             doctype = PDF_DOC;
     }
 

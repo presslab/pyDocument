@@ -19,35 +19,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <pdf.h>
 
 
-int extractInfo(Document *doc)
+int getXRefSize(struct Document *doc)
+{
+    char buffer[10];
+    size_t size = 4;
+
+
+    lseek(doc->descriptor, 0, SEEK_END);
+    read = read(doc->descriptor, buffer, size);
+
+    if (nread > 0)
+    {
+        while ()
+
+    }
+}
+
+int getInfo(Document *doc)
 {
 
-};
+}
 
-int extractImages(Document *doc, int page)
+int getImages(Document *doc, int page)
 {
 
-};
+}
 
-int extractText(Document *doc, int page)
+int getText(Document *doc, int page)
 {
 
-};
+}
 
-int extractTextPos(Document *doc, int page)
+int getTextPos(Document *doc, int page)
 {
 
-};
+}
 
 int getNumPages(Document *doc)
 {
 
-};
+}
 
 int getVersion(Document *doc)
 {
 
-};
-
-
+}
 
