@@ -52,49 +52,54 @@ int closeDoc(struct Document *doc)
     return close(doc->descriptor);
 };
 
-char *getDocLineBack(struct Document *doc, int nline)
+int getStartLineBack(struct Document *doc, int nline)
 {
-    int i, rsize, csize, currline;
+    int nbytes, currline, offset;
     char buffer;
-    char *buffer, *line, *linebuf;
 
-    i = 0;
+    nbytes = 0;
     currline = 0;
-    csize = 0;
-    line = malloc(csize);
 
     while (1)
     {
-        lseek(doc->descriptor, -(++i), SEEK_END);
-        rsize = read(doc->descriptor, &buffer, 1);
-        if (rsize == -1)
+        offset = lseek(doc->descriptor, -(++nbytes), SEEK_END);
+        if (read(doc->descriptor, &buffer, 1) == -1)
             break;
 
         if (buffer == '\n' || buffer == EOF)
         {
-            if (currline++ == nline)
-                break;
+            if (currline++ > nline)
+                return ++offset;
+        }
+    }
+    return -1;
+}
 
-            csize = 0;
-            free(line);
-            line = malloc(csize);
+char *getDocLine(struct Document *doc, int offset)
+{
+    char *line;
+    int size;
+    char buffer; 
+
+    buffer = ' ';
+    size = 0;
+    line = NULL;
+
+    lseek(doc->descriptor, offset, SEEK_SET);
+    line = malloc(size);    
+
+    while (buffer != '\n' && buffer != EOF)
+    {
+        if (read(doc->descriptor, &buffer, 1) == 1)
+        {
+            line = realloc(line, ++size);
+            line[size-1] = buffer;
         } else {
-            line = realloc(line, ++csize);
-            line[csize-1] = buffer;
+            break;
         }
     }
 
-    linebuf = malloc(sizeof(line));
-    rsize = 0;
-    for (i=csize; i>=0; i--)
-    {
-        if (line[i] == 0)
-            continue;
-        linebuf[rsize++] = line[i];
-    }
-    free(line);
-
-    return linebuf;
+    return line;
 }
 
 int getDocType(struct Document *doc)

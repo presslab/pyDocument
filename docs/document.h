@@ -49,7 +49,8 @@ struct Document getDoc(char []);
 
 int openDoc(struct Document *);
 int closeDoc(struct Document *);
-char *getDocLineBack(struct Document *, int);
+int getDocStartLineBack(struct Document *, int);
+char *getDocLine(struct Document *, int);
 int getDocType(struct Document *);
 
 
