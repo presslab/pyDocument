@@ -20,29 +20,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PDF_H
 #endif
 
-enum XRefType {
-  xrefEntryFree,
-  xrefEntryUncompressed,
-  xrefEntryCompressed
+struct doc_pdf {
+
+    int trailer_size;
+    int trailer_prev;
+    char *trailer_root;
+    char *trailer_info;
+    char *trailer_id;
+    char *trailer_dictionary;
+
+    int xref_offset;
 };
 
-struct XRefEntry {
-  int offset;
-  int gen;
-  enum XRefType type;
-};
+void initialize_doc(struct Document *);
 
-int getXRefSize(struct Document *doc);
+void get_xref_offset(struct Document *);
 
-int getInfo(struct Document *doc);
-
-int getImages(struct Document *doc, int page);
-
-int getText(struct Document *doc, int page);
-
-int getTextPos(struct Document *doc, int page);
-
-int getNumPages(struct Document *doc);
-
-int getVersion(struct Document *doc);
 

@@ -19,49 +19,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <pdf.h>
 
 
-int getXRefSize(struct Document *doc)
+void initialize_doc(struct Document *doc)
 {
-    char buffer[10];
-    size_t size = 4;
-
-
-    lseek(doc->descriptor, 0, SEEK_END);
-    read = read(doc->descriptor, buffer, size);
-
-    if (nread > 0)
-    {
-        while ()
-
-    }
+    struct doc_pdf doc_internal;
+    doc->doc_internal = &doc_internal;
 }
 
-int getInfo(Document *doc)
+void get_xref_offset(struct Document *doc)
 {
+    int nbytes;
+    struct doc_pdf *di;
 
+    nbytes = getStartLineBack(doc, 1);
+    //todo: error
+    di = doc->doc_internal;
+    di->xref_offset = atoi(getDocLine(doc, nbytes));
 }
 
-int getImages(Document *doc, int page)
+void get_trailer(struct Document *doc, int xref_offset)
 {
+
 
 }
 
-int getText(Document *doc, int page)
-{
 
-}
-
-int getTextPos(Document *doc, int page)
-{
-
-}
-
-int getNumPages(Document *doc)
-{
-
-}
-
-int getVersion(Document *doc)
-{
-
-}
 

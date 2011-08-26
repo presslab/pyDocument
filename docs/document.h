@@ -14,7 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef DOC_H
 #define DOC_H
 #endif
@@ -22,36 +21,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NOTKWON_DOC -1
 #define PDF_DOC 1
 
-struct Image {
-    int offset;
-    int length;
-    char *text;
-};
-
-struct Text {
-    int offset;
-    int length;
-    char *text;
-};
-
 struct Document {
     char *filename;
+    int descriptor;
+    int doctype;
+    void *doc_internal;
 
     char version;
     char info;
-    int descriptor;
-    int doctype;
-    struct Image *image;
-    struct Text *text;
 };
 
 struct Document getDoc(char []);
 
 int openDoc(struct Document *);
+
 int closeDoc(struct Document *);
+
 int getDocStartLineBack(struct Document *, int);
+
 char *getDocLine(struct Document *, int);
+
 int getDocType(struct Document *);
-
-
 
