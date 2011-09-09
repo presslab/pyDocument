@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <document.h>
 
-struct Document getDoc(char *filename)
+Document getDoc(char *filename)
 {
-    struct Document doc;
+    Document doc;
     doc.doctype = -1;
     doc.filename = filename;
     doc.descriptor = openDoc(&doc);
@@ -34,7 +34,7 @@ struct Document getDoc(char *filename)
     return doc;
 };
 
-int openDoc(struct Document *doc)
+int openDoc(Document *doc)
 {
     int descriptor;
 
@@ -47,12 +47,12 @@ int openDoc(struct Document *doc)
     }
 };
 
-int closeDoc(struct Document *doc)
+int closeDoc(Document *doc)
 {
     return close(doc->descriptor);
 };
 
-int getStartLineBack(struct Document *doc, int nline)
+int getStartLineBack(Document *doc, int nline)
 {
     int nbytes, currline, offset;
     char buffer;
@@ -75,7 +75,7 @@ int getStartLineBack(struct Document *doc, int nline)
     return -1;
 }
 
-char *getDocLine(struct Document *doc, int offset)
+char *getDocLine(Document *doc, int offset)
 {
     char *line;
     int size;
@@ -94,15 +94,34 @@ char *getDocLine(struct Document *doc, int offset)
         {
             line = realloc(line, ++size);
             line[size-1] = buffer;
+            offset += size;
         } else {
             break;
         }
     }
-
     return line;
 }
 
-int getDocType(struct Document *doc)
+int getNextOffsetLine(Document *doc, int offset)
+{
+    char buffer; 
+
+    buffer = ' ';
+
+    lseek(doc->descriptor, offset, SEEK_SET);
+
+    while (buffer != '\n' && buffer != EOF)
+    {
+        if (read(doc->descriptor, &buffer, 1) == 1)
+            ++offset;
+        else
+            break;
+    }
+
+    return offset;
+}
+
+int getDocType(Document *doc)
 {
     char buffer[10];
     size_t size = 4;

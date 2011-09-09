@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PDF_H
 #endif
 
-struct doc_pdf {
+typedef struct _doc_pdf {
 
     int trailer_size;
     int trailer_prev;
@@ -29,11 +29,17 @@ struct doc_pdf {
     char *trailer_id;
     char *trailer_dictionary;
 
+    int trailer_offset;
     int xref_offset;
-};
 
-void initialize_doc(struct Document *);
+} doc_pdf;
 
-void get_xref_offset(struct Document *);
+void initialize_doc(Document *);
+
+void get_xref_offset(Document *);
+
+void get_dictionary(char *array[], char strdict[]);
+
+void get_trailer(Document *, int);
 
 

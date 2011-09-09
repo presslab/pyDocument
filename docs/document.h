@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NOTKWON_DOC -1
 #define PDF_DOC 1
 
-struct Document {
+typedef struct _Document {
     char *filename;
     int descriptor;
     int doctype;
@@ -29,17 +29,19 @@ struct Document {
 
     char version;
     char info;
-};
+} Document;
 
-struct Document getDoc(char []);
+Document getDoc(char []);
 
-int openDoc(struct Document *);
+int openDoc(Document *);
 
-int closeDoc(struct Document *);
+int closeDoc(Document *);
 
-int getDocStartLineBack(struct Document *, int);
+int getDocStartLineBack(Document *, int);
 
-char *getDocLine(struct Document *, int);
+char *getDocLine(Document *, int);
 
-int getDocType(struct Document *);
+int getNextOffsetLine(Document *, int);
+
+int getDocType(Document *);
 

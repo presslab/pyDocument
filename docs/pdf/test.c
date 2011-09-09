@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[])
 {
-    struct Document doc;
+    Document doc;
     int nbytes, xref_offset;
     char *line;
 
@@ -30,15 +30,25 @@ int main(int argc, char *argv[])
     doc = getDoc("/home/alexandre/Work/clientes/opovo/impresso/pdfs/01c 01CP_01.pdf");
     if (doc.doctype == 1) // we have a pdf file
     {
-
         initialize_doc(&doc);
+
+        // #1 get the xref offset
         get_xref_offset(&doc);
 
+        // wanning: copy of doc_pdf
+        doc_pdf di = *(doc_pdf *) doc.doc_internal;
 
-        struct doc_pdf *di;
-        di = doc.doc_internal;
+        // #2 get the trailer
+        get_trailer(&doc, di.xref_offset);
 
-        printf("xref offset is: %d\n", di->xref_offset);
+        // wanning: copy of doc_pdf
+        di = *(doc_pdf *) doc.doc_internal;
+
+
+        printf("xref offset is: %d %p\n", di.xref_offset, &di.xref_offset);
+        printf("trailer offset is: %d %p\n", di.trailer_offset, &di.trailer_offset);
+
+ 
 
 /*
         nbytes = getStartLineBack(&doc, 0);
